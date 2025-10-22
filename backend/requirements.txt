@@ -5,7 +5,7 @@ python-multipart==0.0.6
 pillow==10.0.1
 opencv-python==4.8.1.78
 pytesseract==0.3.10
-numpy==1.24.3
+numpy==2.1.2
 sqlalchemy==2.0.23
 sqlitebiter==0.14.5
 python-dotenv==1.0.0
