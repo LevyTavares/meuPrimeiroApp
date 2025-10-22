@@ -1,6 +1,6 @@
-# 🤝 Contribuindo para TEstify
+# 🤝 Contribuindo para Testify
 
-Obrigado por considerar contribuir com o TEstify! Este documento fornece diretrizes e instruções.
+Obrigado por considerar contribuir com o Testify! Este documento fornece diretrizes e instruções.
 
 ## 📋 Código de Conduta
 
