@@ -7,7 +7,7 @@ from typing import List
 import json
 import os
 from datetime import datetime
-from schemas import ResultadoResponse, EstatisticasResponse
+from schemas import ResultadoResponse, EstatisticasResponse, ResultadoCreate
 
 router = APIRouter()
 
@@ -75,11 +75,7 @@ def calcular_resultado(respostas_aluno: List[str], gabarito_id: int) -> dict:
     }
 
 @router.post("/", response_model=ResultadoResponse)
-async def criar_resultado(
-    prova_id: int,
-    gabarito_id: int,
-    respostas_aluno: List[str]
-):
+async def criar_resultado(payload: ResultadoCreate):
     """
     Criar um resultado de correção
     
@@ -89,7 +85,7 @@ async def criar_resultado(
     """
     provas_data = load_provas()
     prova = next(
-        (p for p in provas_data["provas"] if p["id"] == prova_id),
+        (p for p in provas_data["provas"] if p["id"] == payload.prova_id),
         None
     )
     
@@ -97,12 +93,12 @@ async def criar_resultado(
         raise HTTPException(status_code=404, detail="Prova não encontrada")
     
     # Calcular resultado
-    calculo = calcular_resultado(respostas_aluno, gabarito_id)
+    calculo = calcular_resultado(payload.respostas_aluno, payload.gabarito_id)
     
     # Obter gabarito para pegar respostas corretas
     gabaritos_data = load_gabaritos()
     gabarito = next(
-        (g for g in gabaritos_data["gabaritos"] if g["id"] == gabarito_id),
+        (g for g in gabaritos_data["gabaritos"] if g["id"] == payload.gabarito_id),
         None
     )
     if not gabarito:
@@ -111,12 +107,12 @@ async def criar_resultado(
     data = load_resultados()
     novo_resultado = {
         "id": data["id_counter"],
-        "prova_id": prova_id,
-        "gabarito_id": gabarito_id,
+        "prova_id": payload.prova_id,
+        "gabarito_id": payload.gabarito_id,
         "nome_aluno": prova["nome_aluno"],
         "matricula_aluno": prova["matricula_aluno"],
         "turma_aluno": prova["turma_aluno"],
-        "respostas_aluno": respostas_aluno,
+        "respostas_aluno": payload.respostas_aluno,
         "respostas_corretas": gabarito["respostas_corretas"],
         **calculo,
         "criado_em": datetime.now().isoformat()

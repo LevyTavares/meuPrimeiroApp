@@ -59,6 +59,12 @@ class ProvaResponse(BaseModel):
         from_attributes = True
 
 # ===== RESULTADO =====
+class ResultadoCreate(BaseModel):
+    """Schema de criação de resultado (JSON body)"""
+    prova_id: int
+    gabarito_id: int
+    respostas_aluno: List[str]
+
 class ResultadoResponse(BaseModel):
     """Schema de resposta para resultado da correção"""
     id: int
