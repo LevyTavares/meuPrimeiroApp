@@ -2,6 +2,10 @@
 
 > Uma aplicação moderna e intuitiva para professores criarem, gerenciarem e corrigirem avaliações com facilidade.
 
+**Frontend**: React Native + Expo  
+**Backend**: FastAPI + Python  
+**Deployment**: Docker + Docker Compose
+
 ---
 
 ## 🎯 Sobre o Projeto
@@ -12,59 +16,129 @@
 - ✅ Corrigir provas de forma rápida e eficiente
 - ✅ Gerar relatórios detalhados de desempenho
 - ✅ Acompanhar o progresso dos alunos
+- ✅ Automatizar a geração de gabaritos em PDF/PNG
 
-Desenvolvido com **React Native** e **Expo**, funciona perfeitamente em Android, iOS e Web.
+Desenvolvido com **React Native**, **Expo** e **FastAPI**, funciona perfeitamente em Android, iOS, Web e pode ser deployado em qualquer servidor.
+
+---
+
+## 🏗️ Arquitetura
+
+```
+┌─────────────────────────────────────────────┐
+│   Frontend (React Native + Expo)            │
+│   - SplashScreen / HomeScreen               │
+│   - CreateTemplateScreen (Criar gabaritos)  │
+│   - CorrectorScreen (Corrigir provas)       │
+│   - ReportsScreen (Visualizar resultados)   │
+└────────────┬────────────────────────────────┘
+             │ HTTP/REST API
+             ▼
+┌─────────────────────────────────────────────┐
+│   Backend API (FastAPI + Python)            │
+│   ├─ /api/gabaritos (CRUD)                  │
+│   ├─ /api/provas (Upload + Storage)         │
+│   └─ /api/resultados (Correção + Stats)     │
+│                                             │
+│   Features:                                 │
+│   - Geração de Gabaritos (PIL/Pillow)      │
+│   - Upload de Provas (Multipart)            │
+│   - Processamento de Imagens (OpenCV)      │
+│   - OCR (Tesseract)                         │
+│   - Cálculo Automático de Notas             │
+└────────────┬────────────────────────────────┘
+             │
+             ▼
+┌─────────────────────────────────────────────┐
+│   Persistência & Storage                    │
+│   - JSON Files (desenvolvimento)            │
+│   - SQLite/PostgreSQL (produção)            │
+│   - File Storage (Uploads de provas)        │
+│   - PNG Storage (Gabaritos gerados)         │
+└─────────────────────────────────────────────┘
+```
+
+---
+
+## 🔧 Stack Técnico
+
+### Frontend
+
+- **React Native** - Framework mobile cross-platform
+- **Expo** - Plataforma para desenvolvimento rápido
+- **TypeScript** - Type safety
+- **Reanimated** - Animações performáticas
+- **React Native Paper** - Componentes UI
+
+### Backend
+
+- **FastAPI** - Framework web assíncrono de alta performance
+- **Pydantic** - Validação de dados robusto
+- **Pillow (PIL)** - Geração de gabaritos em PNG
+- **OpenCV** - Processamento de imagens
+- **Tesseract OCR** - Reconhecimento óptico de caracteres
+- **SQLAlchemy** - ORM para banco de dados
+
+### DevOps & Deployment
+
+- **Docker** - Containerização
+- **Docker Compose** - Orquestração local
+- **Uvicorn** - Servidor ASGI
 
 ---
 
 ## 🚀 Quick Start
 
-### Pré-requisitos
+### Opção 1: Frontend Apenas (Local)
 
-- Node.js 14+ instalado
-- npm ou yarn
-
-### Instalação
-
-1. **Clone o repositório** (ou navegue até a pasta do projeto)
-
-   ```bash
-   cd meuPrimeiroApp
-   ```
-
-2. **Instale as dependências**
-
-   ```bash
-   npm install
-   ```
-
-3. **Inicie o desenvolvimento**
-   ```bash
-   npm start
-   ```
-
-### Rodando a Aplicação
-
-**Via Expo Go (Mobile)**
-
-- Escaneie o QR code com seu smartphone (Expo Go)
-- A aplicação abrirá em seu dispositivo
-
-**Via Web**
+Perfeito para desenvolvimento do frontend:
 
 ```bash
-npm run start:web
+# Instalar dependências
+npm install
+
+# Iniciar servidor de desenvolvimento
+npm start
 ```
 
-Acesse: `http://localhost:8082`
+Depois:
 
-**Via Simulador**
+- **Expo Go**: Escaneie o QR code com seu smartphone
+- **Web**: Pressione `w` no terminal
+- **Simulador Android**: Pressione `a`
+- **Simulador iOS**: Pressione `i`
+
+### Opção 2: Frontend + Backend (Recomendado)
+
+Ambiente completo com frontend web e backend:
 
 ```bash
-# Pressione no terminal após npm start
-a  # Android Emulator
-i  # iOS Simulator
+# A partir da raiz do projeto
+docker-compose up
 ```
+
+Acesse:
+
+- **Frontend Web**: http://localhost:3000 (quando houver)
+- **Backend API**: http://localhost:8000
+- **Swagger API Docs**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
+
+### Opção 3: Backend Apenas
+
+Para desenvolver apenas a API:
+
+```bash
+cd backend
+
+# Instalar dependências
+pip install -r requirements.txt
+
+# Rodar servidor
+python main.py
+```
+
+API disponível em: http://localhost:8000
 
 ---
 
@@ -81,12 +155,13 @@ i  # iOS Simulator
 - Defina título da avaliação
 - Configure número de questões
 - Adicione gabarito (respostas corretas)
+- **Gera automaticamente PDF/PNG formatado**
 - Salve templates para reutilização
 
 ### 📷 Corrigir Provas
 
 - Captura e processamento de imagens
-- Reconhecimento automático de respostas
+- Reconhecimento automático de respostas (OCR)
 - Entrada de dados do aluno (nome, matrícula, turma)
 - Cálculo automático de notas
 
@@ -95,24 +170,28 @@ i  # iOS Simulator
 - Visualize resultados por gabarito
 - Histórico completo de correções
 - Informações detalhadas do aluno
-- Estatísticas de desempenho
+- **Estatísticas de desempenho**
+  - Questão mais errada
+  - Taxa de acerto média
+  - Distribuição de notas
 
 ---
 
 ## 🛠️ Scripts Disponíveis
 
 ```bash
-# Iniciar em desenvolvimento
-npm start
+# Frontend
+npm start              # Inicia desenvolvimento Expo
+npm run start:web     # Inicia versão web
+npm run tsc          # Verifica tipos TypeScript
 
-# Iniciar em modo web
-npm run start:web
+# Backend
+cd backend && python main.py  # Inicia API
 
-# Verificar tipos TypeScript
-npm run tsc
-
-# Limpar cache e reconstruir
-npm run reset-project
+# Docker
+docker-compose up             # Inicia todos os serviços
+docker-compose down           # Para todos os serviços
+docker-compose logs backend   # Ver logs do backend
 ```
 
 ---
@@ -121,19 +200,41 @@ npm run reset-project
 
 ```
 meuPrimeiroApp/
-├── App.js                      # Componente principal
-├── index.js                    # Entry point
-├── SplashScreen.js            # Tela de splash
-├── HomeScreen.js              # Tela inicial
-├── CreateTemplateScreen.js    # Criação de gabaritos
-├── CorrectorScreen.js         # Correção de provas
-├── ReportsScreen.js           # Visualização de relatórios
-├── EmptyState.js              # Componente para estado vazio
-├── assets/                    # Imagens e recursos
-├── components/                # Componentes reutilizáveis
-├── hooks/                     # Custom React hooks
-├── constants/                 # Constantes da aplicação
-└── package.json              # Dependências e scripts
+├── frontend/
+│   ├── App.js                      # Componente principal
+│   ├── index.js                    # Entry point
+│   ├── SplashScreen.js
+│   ├── HomeScreen.js
+│   ├── CreateTemplateScreen.js
+│   ├── CorrectorScreen.js
+│   ├── ReportsScreen.js
+│   ├── EmptyState.js
+│   ├── assets/                     # Imagens e recursos
+│   ├── components/                 # Componentes reutilizáveis
+│   ├── hooks/                      # Custom React hooks
+│   ├── constants/                  # Constantes da aplicação
+│   └── package.json
+│
+├── backend/                        # ⭐ API REST
+│   ├── main.py                     # Aplicação FastAPI
+│   ├── schemas.py                  # Modelos Pydantic
+│   ├── utils_gabarito.py          # Gerador de gabaritos
+│   ├── routes/
+│   │   ├── gabarito_routes.py      # CRUD de gabaritos
+│   │   ├── prova_routes.py         # Upload de provas
+│   │   └── resultado_routes.py     # Cálculo de resultados
+│   ├── data/                       # Dados persistentes
+│   ├── gabaritos_gerados/          # Gabaritos em PNG
+│   ├── requirements.txt            # Dependências Python
+│   ├── Dockerfile                  # Containerização
+│   ├── .env.example                # Variáveis de ambiente
+│   └── README.md                   # Documentação do backend
+│
+├── docker-compose.yml              # Orquestração
+├── README.md                       # Este arquivo
+├── CONTRIBUTING.md                 # Guia de contribuição
+├── CHANGELOG.md                    # Histórico de versões
+└── FAQ.md                          # Perguntas frequentes
 ```
 
 ---
@@ -148,17 +249,44 @@ meuPrimeiroApp/
 
 ---
 
-## 🔧 Tecnologias Utilizadas
+## 📡 API REST - Principais Endpoints
 
-| Tecnologia               | Versão  | Uso              |
-| ------------------------ | ------- | ---------------- |
-| **React Native**         | Latest  | Framework mobile |
-| **Expo**                 | Latest  | Platform         |
-| **TypeScript**           | ~5.9.2  | Type safety      |
-| **React Native Paper**   | 4.9.2   | Componentes UI   |
-| **Expo Linear Gradient** | ~15.0.7 | Gradientes       |
-| **Expo Haptics**         | ^15.0.7 | Feedback tátil   |
-| **Expo Symbols**         | ^1.0.7  | Ícones SF        |
+### Health Check
+
+```bash
+GET /health
+```
+
+### Gabaritos
+
+```bash
+POST   /api/gabaritos              # Criar
+GET    /api/gabaritos              # Listar
+GET    /api/gabaritos/{id}         # Obter
+PUT    /api/gabaritos/{id}         # Atualizar
+DELETE /api/gabaritos/{id}         # Deletar
+```
+
+### Provas
+
+```bash
+POST   /api/provas                 # Submeter prova
+GET    /api/provas                 # Listar
+GET    /api/provas/{id}            # Obter
+DELETE /api/provas/{id}            # Deletar
+```
+
+### Resultados
+
+```bash
+POST   /api/resultados             # Criar resultado
+GET    /api/resultados             # Listar
+GET    /api/resultados/{id}        # Obter
+GET    /api/resultados/gabarito/{id}/estatisticas  # Estatísticas
+DELETE /api/resultados/{id}        # Deletar
+```
+
+Veja [backend/README.md](./backend/README.md) para documentação completa.
 
 ---
 
@@ -167,52 +295,112 @@ meuPrimeiroApp/
 - ✅ **Android**: 5.0+
 - ✅ **iOS**: 12.0+
 - ✅ **Web**: Todos os navegadores modernos
+- ✅ **Docker**: Qualquer SO com Docker instalado
 
 ---
 
 ## 🐛 Troubleshooting
 
-### Erro: "Cannot find module"
+### Frontend
+
+**Erro: "Cannot find module"**
 
 ```bash
-# Limpe o cache e reinstale
 rm -rf node_modules package-lock.json
 npm install
 npm start
 ```
 
-### Erro de asset não encontrado
+**Erro de asset não encontrado**
 
 - Verifique se os arquivos existem em `assets/images/`
-- Use caminho relativo correto: `./assets/images/filename.png`
+- Use caminho correto: `./assets/images/filename.png`
 
-### Porto já em uso
+### Backend
+
+**Erro: "ModuleNotFoundError"**
 
 ```bash
-# Use uma porta diferente
-npx expo start --port 8083
+pip install -r requirements.txt
 ```
+
+**Erro ao conectar com API**
+
+- Verifique se o backend está rodando: `http://localhost:8000/health`
+- Confirme o CORS está configurado para aceitar seu domínio
+
+---
+
+## 🚀 Deploy em Produção
+
+### Docker Hub
+
+```bash
+docker build -t seu-usuario/testify-backend ./backend
+docker push seu-usuario/testify-backend
+```
+
+### Railway / Heroku / AWS
+
+Veja [backend/README.md](./backend/README.md) para mais detalhes.
 
 ---
 
 ## 📝 Commits Recentes
 
-- ✅ fix: resolve TypeScript path aliases e install missing expo deps
-- ✅ fix: switch from expo-router to custom App.js entry point
-- ✅ fix: correct asset paths for testify-icon.png
-- ✅ feat: add npm scripts for start, start:web, and tsc
+- ✅ feat: add complete backend API with FastAPI
+- ✅ fix: switch from expo-router to custom App.js
+- ✅ docs: update README with comprehensive documentation
+- ✅ feat: add CONTRIBUTING.md, CHANGELOG.md, FAQ.md
+
+---
+
+## 📊 Roadmap
+
+- [ ] Integração completa OCR (Tesseract)
+- [ ] Autenticação JWT
+- [ ] PostgreSQL em produção
+- [ ] Exportação de relatórios em PDF
+- [ ] Dashboard de estatísticas
+- [ ] Sincronização na nuvem
+- [ ] Mobile app nativa compilada
+- [ ] Testes automatizados
+- [ ] CI/CD pipeline
 
 ---
 
 ## 👨‍💻 Desenvolvimento
 
-Este projeto está em desenvolvimento ativo. Contribuições e sugestões são bem-vindas!
+### Configurar Ambiente Local
+
+```bash
+# Frontend
+npm install
+npm start
+
+# Backend (em outro terminal)
+cd backend
+pip install -r requirements.txt
+python main.py
+```
+
+### Contribuir
+
+Veja [CONTRIBUTING.md](./CONTRIBUTING.md) para diretrizes completas.
 
 ---
 
 ## 📄 Licença
 
 Este projeto está disponível sob a licença MIT.
+
+---
+
+## 🤝 Comunidade
+
+- **Issues**: https://github.com/LevyTavares/meuPrimeiroApp/issues
+- **Discussões**: https://github.com/LevyTavares/meuPrimeiroApp/discussions
+- **Pull Requests**: Contribuições são bem-vindas!
 
 ---
 

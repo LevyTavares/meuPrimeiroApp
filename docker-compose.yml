@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: testify-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - DEBUG=True
+    volumes:
+      - ./backend:/app
+      - backend-data:/app/data
+      - backend-gabaritos:/app/gabaritos_gerados
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - testify-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Opcional: Frontend em caso de exposição via Web
+  # frontend:
+  #   build:
+  #     context: ./
+  #     dockerfile: Dockerfile.frontend
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - backend
+  #   networks:
+  #     - testify-network
+
+volumes:
+  backend-data:
+  backend-gabaritos:
+
+networks:
+  testify-network:
+    driver: bridge
