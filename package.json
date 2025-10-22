@@ -1,8 +1,16 @@
 {
+  "scripts": {
+    "start": "expo start",
+    "start:web": "expo start --web",
+    "tsc": "tsc --noEmit"
+  },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
+    "expo-haptics": "^15.0.7",
     "expo-linear-gradient": "~15.0.7",
     "expo-splash-screen": "^31.0.10",
+    "expo-symbols": "^1.0.7",
+    "expo-web-browser": "^15.0.8",
     "react-native-paper": "4.9.2",
     "typescript": "~5.9.2"
   }
