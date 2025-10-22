@@ -1,13 +1,13 @@
 // SplashScreen.js
-import React, { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from "react";
 import {
-  View,
-  StyleSheet,
-  StatusBar,
   Animated,
   Easing,
   Image,
-} from 'react-native';
+  StatusBar,
+  StyleSheet,
+  View,
+} from "react-native";
 
 const SplashScreen = () => {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
@@ -48,10 +48,11 @@ const SplashScreen = () => {
         style={{
           opacity: opacityValue,
           transform: [{ scale: scaleValue }, { translateY: translateYValue }],
-        }}>
+        }}
+      >
         <View style={styles.iconContainer}>
           <Image
-            source={require('./assets/testify-icon.png')}
+            source={require("./assets/images/testify-icon.png")}
             style={styles.iconImage}
             onLoad={() => setIsImageLoaded(true)}
           />
@@ -64,20 +65,20 @@ const SplashScreen = () => {
 const styles = StyleSheet.create({
   splashContainer: {
     flex: 1,
-    backgroundColor: '#346a74',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#346a74",
+    justifyContent: "center",
+    alignItems: "center",
   },
   iconContainer: {
     width: 150,
     height: 150,
     borderRadius: 75,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   iconImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
 });
 
